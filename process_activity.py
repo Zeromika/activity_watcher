@@ -45,7 +45,7 @@ vid_name = video_details['Name']
 def exec_long_running_proc(command, args):
     cmd = "{} {}".format(command, " ".join(str(arg) if ' ' not in arg else arg.replace(' ','\ ') for arg in args))
     print(cmd)
-    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd= config.PATH['DARKNET_PATH'])
 
     # Poll process for new output until finished
     while True:
@@ -79,6 +79,6 @@ def grabResults(db,connection):
 
     print("Finished Processing " + vid_name)
 
-exec_long_running_proc("../darknet/./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", "to_be_processed/vid.mkv", "-json_port", "4050", "-dont_show", "-ext_output"])
+exec_long_running_proc("./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", "to_be_processed/vid.mkv", "-json_port", "4050", "-dont_show", "-ext_output"])
 
 #./darknet detector demo ./data/obj.data ./cfg/yolo-activity-detect.cfg ./yolo-activity.weights to_be_processed/vid.mkv -json_port 4050 -dont_show -ext_output
