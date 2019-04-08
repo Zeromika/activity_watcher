@@ -1,3 +1,6 @@
 watcher
 .vscode
 anomaly.db
+darknet
+__pycache__/config.cpython-37.pyc
+config.py
