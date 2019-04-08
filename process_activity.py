@@ -50,10 +50,10 @@ def exec_long_running_proc(command, args):
     # Poll process for new output until finished
     while True:
         nextline = process.stdout.readline().decode('UTF-8')
-        if nextline == ' JSON-stream sent.':
+        if 'JSON-stream sent.' in nextline :
             thread1 = threading.Thread(target = grabResults, args = (db, connection))
             thread1.start()
-            print("List of threads: ", threading.enumerate())
+            logging.warning("List of threads: " + str(threading.enumerate()))
         if nextline == '' and process.poll() is not None:
             break
         sys.stdout.write(nextline)
@@ -71,13 +71,13 @@ def exec_long_running_proc(command, args):
 def grabResults(db,connection):
     r = requests.get('http://34.73.60.123:4010/')
     processed_results = r.json()
-
+    logging.warning("Started grabbing results")
     for result in processed_results:
         if len(result['objects']):
             for obj in result['objects']:
                 query = connection.execute(db.insert(anomalies).values(detected_anomaly = "Running Person", frame_id=result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
 
-    print("Finished Processing " + vid_name)
+    logging.info("Finished Processing " + vid_name)
 
 exec_long_running_proc("./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", "to_be_processed/vid.mkv", "-json_port", "4050", "-dont_show", "-ext_output"])
 
