@@ -48,9 +48,10 @@ def exec_long_running_proc(command, args):
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd= config.PATH['DARKNET_PATH'])
 
     # Poll process for new output until finished
+    thread1 = None
     while True:
         nextline = process.stdout.readline().decode('UTF-8')
-        if 'JSON-stream sent.' in nextline :
+        if 'JSON-stream sent.' in nextline and thread1:
             thread1 = threading.Thread(target = grabResults, args = (db, connection))
             thread1.start()
             logging.warning("List of threads: " + str(threading.enumerate()))
