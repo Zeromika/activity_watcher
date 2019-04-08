@@ -51,7 +51,7 @@ def exec_long_running_proc(command, args):
     thread1 = None
     while True:
         nextline = process.stdout.readline().decode('UTF-8')
-        if 'JSON-stream sent.' in nextline and thread1:
+        if 'JSON-stream sent.' in nextline and not thread1:
             thread1 = threading.Thread(target = grabResults, args = (db, connection))
             thread1.start()
             logging.warning("List of threads: " + str(threading.enumerate()))
