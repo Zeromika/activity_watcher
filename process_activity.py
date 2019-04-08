@@ -12,7 +12,11 @@ from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Date, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 
-
+logging.basicConfig(filename=config.PATH['logs'],
+                            filemode='a',
+                            format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                            datefmt='%H:%M:%S',
+                            level=logging.DEBUG)
 # Get id of the video to be processed.
 try:
     args = sys.argv
