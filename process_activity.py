@@ -81,7 +81,8 @@ def grabResults(db,connection):
         if len(result['objects']):
             for obj in result['objects']:
                 query = connection.execute(db.insert(anomalies_table).values(RuleId = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
-                logging.warning(json.dump(query))
+                io = json.dumps(query)
+                logging.warning(io)
                 #query = connection.execute(db.insert(video_anomalies_table).values(RuleId = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
 
     logging.info("Finished Processing " + vid_name)
