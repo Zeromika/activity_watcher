@@ -83,7 +83,7 @@ def grabResults(db,connection):
                 query = connection.execute(db.insert(anomalies_table).values(RuleId = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
                 io = json.dumps(query.lastrowid)
                 logging.warning(io)
-                #query = connection.execute(db.insert(video_anomalies_table).values(RuleId = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
+                query = connection.execute(db.insert(video_anomalies_table).values(DetectedAnomalyId = query.lastrowid , VideoId = vid_name))
 
     logging.info("Finished Processing " + vid_name)
 
