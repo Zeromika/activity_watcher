@@ -73,7 +73,7 @@ def exec_long_running_proc(command, args):
 
 
 def grabResults(db,connection):
-    r = requests.get('http://34.73.60.123:4050/')
+    r = requests.get('https://api.myjson.com/bins/wrc88')
     processed_results = r.json()
     logging.warning("Started grabbing results")
     for result in processed_results:
