@@ -38,7 +38,8 @@ Base = declarative_base()
 Base.metadata.create_all(engine)
 connection = engine.connect()
 metadata = db.MetaData()
-anomalies = db.Table('DetectedAnomalies', metadata, autoload=True, autoload_with=engine)
+anomalies_table = db.Table('DetectedAnomalies', metadata, autoload=True, autoload_with=engine)
+video_anomalies_table = db.Table('VideoDetectedAnomalies', metadata, autoload=True, autoload_with=engine)
 #Check with sql statement and get the whole stream of video.
 video_table = db.Table('Videos',metadata,autoload=True, autoload_with=engine)
 
@@ -79,7 +80,9 @@ def grabResults(db,connection):
     for result in processed_results:
         if len(result['objects']):
             for obj in result['objects']:
-                query = connection.execute(db.insert(anomalies).values(RuleId = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
+                query = connection.execute(db.insert(anomalies_table).values(RuleId = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
+                logging.warning(query)
+                #query = connection.execute(db.insert(video_anomalies_table).values(RuleId = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
 
     logging.info("Finished Processing " + vid_name)
 
