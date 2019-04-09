@@ -61,8 +61,7 @@ def exec_long_running_proc(command, args):
             logging.warning("List of threads: " + str(threading.enumerate()))
         if nextline == '' and process.poll() is not None:
             break
-        sys.stdout.write(nextline)
-        sys.stdout.flush()
+        logging.warning(nextline)
 
     output = process.communicate()[0]
     exitCode = process.returncode
