@@ -39,7 +39,7 @@ Base.metadata.create_all(engine)
 connection = engine.connect()
 metadata = db.MetaData()
 anomalies_table = db.Table('DetectedAnomalies', metadata, autoload=True, autoload_with=engine)
-video_anomalies_table = db.Table('VideoDetectedAnomalies', metadata, autoload=True, autoload_with=engine)
+video_anomalies_table = db.Table('VideoDetectedAnomaly', metadata, autoload=True, autoload_with=engine)
 #Check with sql statement and get the whole stream of video.
 video_table = db.Table('Videos',metadata,autoload=True, autoload_with=engine)
 
