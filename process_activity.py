@@ -80,7 +80,7 @@ def grabResults(db,connection):
     for result in processed_results:
         if len(result['objects']):
             for obj in result['objects']:
-                query = connection.execute(db.insert(anomalies).values(detected_anomaly = "Running Person", frame_id=result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
+                query = connection.execute(db.insert(anomalies).values(RuleID = 1,frame =result['frame_id'], center_x = obj['relative_coordinates']['center_x'], center_y = obj['relative_coordinates']['center_y'], width = obj['relative_coordinates']['width'], height = obj['relative_coordinates']['height']))
 
     logging.info("Finished Processing " + vid_name)
 
