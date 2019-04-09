@@ -66,10 +66,10 @@ def exec_long_running_proc(command, args):
     output = process.communicate()[0]
     exitCode = process.returncode
 
-    if (exitCode == 0 and threading.active_count==0):
+    
+    while (exitCode == 0 and threading.active_count==0):
         return output
-    else:
-        raise Exception(command, exitCode, output)
+
 
 
 def grabResults(db,connection):
