@@ -70,6 +70,8 @@ def exec_long_running_proc(command, args):
     
     while (exitCode == 0 and threading.active_count==0):
         return output
+    raise Exception ("Something Went Wrong...")
+
 
 
 
