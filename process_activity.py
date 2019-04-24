@@ -43,7 +43,7 @@ video_anomalies_table = db.Table('video_detected_anomaly', metadata, autoload=Tr
 #Check with sql statement and get the whole stream of video.
 video_table = db.Table('videos',metadata,autoload=True, autoload_with=engine)
 
-video_details = connection.execute(db.select([video_table]).where(video_table._columns.VideoId == vid_id)).fetchall()[0]
+video_details = connection.execute(db.select([video_table]).where(video_table._columns.video_id == vid_id)).fetchall()[0]
 vid_name = video_details['name']
 vid_w = video_details['width']
 vid_h = video_details['height']
