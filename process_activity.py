@@ -91,8 +91,9 @@ def grabResults(db,connection, relative_size):
                 center_y = obj['relative_coordinates']['center_y'] * relative_size['height']
                 width = obj['relative_coordinates']['width'] * relative_size['width']
                 height = obj['relative_coordinates']['height'] * relative_size['height']
-                center_x - relative_size['width']/2
-                query = connection.execute(db.insert(anomalies_table).values(rule_id = 1,frame =result['frame_id'], center_x = center_x, center_y = center_y, width = width, height = height))
+                center_x = center_x - relative_size['width']/2
+                center_y = center_y + relative_size['height']/2
+                query = connection.execute(db.insert(anomalies_table).values(rule_id = 1,frame =result['frame_id'], left_x = center_x, top_y = center_y, width = width, height = height))
                 io = json.dumps(query.lastrowid)
                 logging.warning(io)
                 query2 = connection.execute(db.insert(video_anomalies_table).values(detected_anomaly_id = query.lastrowid , video_id = vid_id))
