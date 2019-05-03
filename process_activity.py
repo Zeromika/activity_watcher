@@ -7,7 +7,7 @@ import requests
 import json
 import sqlalchemy as db
 import threading
-
+from math import ceil
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Date, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
@@ -62,6 +62,7 @@ def exec_long_running_proc(command, args):
         if 'JSON-stream sent.' in nextline and not thread1:
             thread1 = threading.Thread(target = grabResults, args = (db, connection, relative_size))
             thread1.start()
+            info_function(0)
             logging.warning("List of threads: " + str(threading.enumerate()))
         if nextline == '' and process.poll() is not None:
             break
@@ -82,13 +83,11 @@ def info_function(value):
 
 
 def grabResults(db,connection, relative_size):
-    progress = 0
     r = requests.get('https://localhost:4050')
     processed_results = r.json()
     logging.warning("Started grabbing results")
-    info_function(0)
+    info_function(len(processed_results)/100)
     for result in processed_results:
-        info_function(len(result['objects']))
         if len(result['objects']):
             for obj in result['objects']:
                 center_x = obj['relative_coordinates']['center_x'] * relative_size['width']
@@ -102,6 +101,7 @@ def grabResults(db,connection, relative_size):
                 logging.warning(io)
                 query2 = connection.execute(db.insert(video_anomalies_table).values(detected_anomaly_id = query.lastrowid , video_id = vid_id))
 
+    info_function(100)
     logging.info("Finished Processing " + vid_name)
 
 exec_long_running_proc("./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", video_details['path'], "-json_port", "4050", "-dont_show", "-ext_output"])
