@@ -76,15 +76,19 @@ def exec_long_running_proc(command, args):
     raise Exception ("Something Went Wrong...")
 
 
-
+def info_function(value):
+    sys.stdout.write(json.dumps(dict(progress=ceil(value)), indent=2))
+    sys.stdout.flush()
 
 
 def grabResults(db,connection, relative_size):
     progress = 0
-    r = requests.get('https://api.myjson.com/bins/wrc88')
+    r = requests.get('https://localhost:4050')
     processed_results = r.json()
     logging.warning("Started grabbing results")
+    info_function(0)
     for result in processed_results:
+        info_function(len(result['objects']))
         if len(result['objects']):
             for obj in result['objects']:
                 center_x = obj['relative_coordinates']['center_x'] * relative_size['width']
@@ -100,6 +104,6 @@ def grabResults(db,connection, relative_size):
 
     logging.info("Finished Processing " + vid_name)
 
-exec_long_running_proc("./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", "to_be_processed/vid.mkv", "-json_port", "4050", "-dont_show", "-ext_output"])
+exec_long_running_proc("./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", video_details['path'], "-json_port", "4050", "-dont_show", "-ext_output"])
 
 #./darknet detector demo ./data/obj.data ./cfg/yolo-activity-detect.cfg ./yolo-activity.weights to_be_processed/vid.mkv -json_port 4050 -dont_show -ext_output
