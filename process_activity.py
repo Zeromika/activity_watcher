@@ -30,9 +30,9 @@ DB_PATH = config.DB_DETAILS['DB_PATH']
 
 #If environment DB_PATH is set use that engine instead
 if DB_PATH:
-    engine = create_engine(DB_PATH, echo=True)
+    engine = create_engine(DB_PATH, echo=False)
 else:
-    engine = create_engine('sqlite:///anomaly.db', echo=True)
+    engine = create_engine('sqlite:///anomaly.db', echo=False)
 Base = declarative_base()
 
 Base.metadata.create_all(engine)
