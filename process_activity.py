@@ -52,7 +52,7 @@ relative_size = {"width": vid_w, "height": vid_h}
 
 def exec_long_running_proc(command, args):
     cmd = "{} {}".format(command, " ".join(str(arg) if ' ' not in arg else arg.replace(' ','\ ') for arg in args))
-    print(cmd)
+    #print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd= config.PATH['DARKNET_PATH'])
 
     # Poll process for new output until finished
@@ -83,7 +83,7 @@ def info_function(value):
 
 
 def grabResults(db,connection, relative_size):
-    r = requests.get('https://localhost:4050')
+    r = requests.get('http://localhost:4050')
     processed_results = r.json()
     logging.warning("Started grabbing results")
     info_function(len(processed_results)/100)
@@ -94,8 +94,9 @@ def grabResults(db,connection, relative_size):
                 center_y = obj['relative_coordinates']['center_y'] * relative_size['height']
                 width = obj['relative_coordinates']['width'] * relative_size['width']
                 height = obj['relative_coordinates']['height'] * relative_size['height']
-                center_x = center_x - relative_size['width']/2
-                center_y = center_y + relative_size['height']/2
+                center_x = center_x - width/2
+                center_y = center_y + height/2
+                height = height * (-1)
                 query = connection.execute(db.insert(anomalies_table).values(rule_id = 1,frame =result['frame_id'], left_x = center_x, top_y = center_y, width = width, height = height))
                 io = json.dumps(query.lastrowid)
                 logging.warning(io)
@@ -103,7 +104,10 @@ def grabResults(db,connection, relative_size):
 
     info_function(100)
     logging.info("Finished Processing " + vid_name)
+try:
+    exec_long_running_proc("./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", video_details['path'], "-json_port", "4050", "-dont_show", "-ext_output"])
+except e:
+    logging.error(e)
 
-exec_long_running_proc("./darknet", args=["detector", "demo", "./data/obj.data", "./cfg/yolo-activity-detect.cfg", "./yolo-activity.weights", video_details['path'], "-json_port", "4050", "-dont_show", "-ext_output"])
 
 #./darknet detector demo ./data/obj.data ./cfg/yolo-activity-detect.cfg ./yolo-activity.weights to_be_processed/vid.mkv -json_port 4050 -dont_show -ext_output
